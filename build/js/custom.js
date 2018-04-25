@@ -6,6 +6,75 @@
  *     // code here
  * });
  */
+$(function(){
+
+})
+var dataset;
+
+ $("#button").click(function(e){
+ 	e.preventDefault();
+    $.post("http://192.168.19.28:8008/api/auth/login",
+    {
+        email: $('[type=email]').val(),
+        password: $('[type=password]').val(),
+    },
+    function(data, status){
+        console.log("Data: " , data , "\nStatus: " + status);
+
+        var url = "http://192.168.19.28:8008/api/auth/me";
+	     $.ajax({
+	          type: 'GET',
+	          url: url,
+	          beforeSend: function(xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + data.access_token);
+  			window.location = './dashboard.html';
+        },
+	          success: function(res){
+	            console.log(res);
+	          }
+        });
+
+
+
+    });
+});
+
+	$.getJSON("build/js/any.json", function(json) {
+		dataset = json;
+		var p = JSON.parse(JSON.stringify(json));
+		// console.log ( p.punctuality.length );
+		console.log(p.punctuality[10].vehicle_number);
+		$("#total_vehicle_dispatched").html(p.vehicldeployment.length);
+		
+		
+		var totalkm = 0; 
+		var totalTrip=0;
+		for(var i = 0; i < p.ma.length; i++ )
+		{
+			totalkm+=parseInt(p.ma[i].total_km);
+			totalTrip+=parseInt(p.ma[i].total_trips);
+		}
+		
+		$("#totalkm").html(totalkm);		
+		$("#totaltrip").html(totalTrip);
+
+
+		var totalDriver = 0; 
+		for(var i = 0; i < p.ma.length; i++ )
+		{
+			totalDriver+=parseInt(p.ma[i].planned_revenue_km);
+		}
+		
+		$("#totaldriver").html(totalDriver);
+
+
+
+
+   // console.log(punctuality); // this will show the info it in firebug console
+});
+
+
+
 (function($,sr){
     // debouncing function from John Hann
     // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
@@ -1991,7 +2060,7 @@ if (typeof NProgress != 'undefined') {
 					  pointHoverBackgroundColor: "#fff",
 					  pointHoverBorderColor: "rgba(220,220,220,1)",
 					  pointBorderWidth: 1,
-					  data: [31, 74, 6, 39, 20, 85, 7]
+					  data: [31, 74, 6, 39 , 20, 85, 7]
 					}, {
 					  label: "My Second dataset",
 					  backgroundColor: "rgba(3, 88, 106, 0.3)",
@@ -2149,7 +2218,7 @@ if (typeof NProgress != 'undefined') {
 			  var lineChart = new Chart(ctx, {
 				type: 'line',
 				data: {
-				  labels: ["January", "February", "March", "April", "May", "June", "July"],
+				  labels: ["route 10", "Route 12", "Route 24", "Route 32", "Route 42", "Route 48", "Route 52"],
 				  datasets: [{
 					label: "My First dataset",
 					backgroundColor: "rgba(38, 185, 154, 0.31)",
@@ -2177,6 +2246,8 @@ if (typeof NProgress != 'undefined') {
 			}
 				
 			  // Bar chart
+
+
 			  
 			if ($('#mybarChart').length ){ 
 			  
@@ -2184,13 +2255,13 @@ if (typeof NProgress != 'undefined') {
 			  var mybarChart = new Chart(ctx, {
 				type: 'bar',
 				data: {
-				  labels: ["January", "February", "March", "April", "May", "June", "July"],
+				  labels: ["Bus 1", "Bus 2", "Bus 3", "Bus 4", "Bus 5", "Bus 6", "Bus 7"],
 				  datasets: [{
-					label: '# of Votes',
+					label: '# of Vechiles',
 					backgroundColor: "#26B99A",
 					data: [51, 30, 40, 28, 92, 50, 45]
 				  }, {
-					label: '# of Votes',
+					label: '# of Vechiles',
 					backgroundColor: "#03586A",
 					data: [41, 56, 25, 48, 72, 34, 12]
 				  }]
@@ -2208,6 +2279,13 @@ if (typeof NProgress != 'undefined') {
 			  });
 			  
 			} 
+
+
+			//begin
+
+
+
+			//end
 			  
 
 			  // Doughnut chart
